@@ -8,7 +8,7 @@ from tkinter import messagebox
 root = Tk()
 
 c = filedialog.asksaveasfilename(defaultextension='.db', filetypes=[('database files', '.db')], initialfile='bmngmnt',
-                                 title="Choose your databasefile", initialdir="/", parent=root)
+                                 title="Choose your databasefile", initialdir=".", parent=root)
 
 success = False
 create = False
@@ -27,12 +27,7 @@ if success:
 	`userName`	TEXT NOT NULL,
 	`userFName`	TEXT NOT NULL,
 	`userLName`	TEXT NOT NULL,
-	`userPassword`	TEXT NOT NULL,
-	`userSecurityQ1`	TEXT NOT NULL,
-	`userSecurityQ2`	TEXT NOT NULL,
-	`userSecurityA1`	TEXT NOT NULL,
-	`userSecurityA2`	TEXT NOT NULL,
-	`userCreateDate`	TEXT NOT NULL
+	`userPassword`	TEXT NOT NULL
 );""")
         print("Created USER master")
 

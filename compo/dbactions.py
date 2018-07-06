@@ -4,13 +4,15 @@ import sqlite3
 from tkinter import messagebox
 
 try:
-    db = sqlite3.connect("media/maindb.db")
+    db = sqlite3.connect("bmngmnt.db")
     c = db.cursor()
 except sqlite3.Error as err:
     messagebox.showwarning(title="Database Connection Error", message="Something went wrong: {}".format(err))
 
 
 def register(un, ufn, uln, up, ucp):
+    import datetime
+
     if up == ucp:
         signup = ("INSERT INTO user_master (userName, userFName, userLName, userPassword) VALUES (?, ?, ?, ?)")
         data = (un, ufn, uln, up)
@@ -31,7 +33,7 @@ def register(un, ufn, uln, up, ucp):
 def login(username, userpassword):
     try:
         c.execute(
-            "SELECT userPassword, userFName, userLName, userID, directory_made FROM user_master WHERE userName =?",
+            "SELECT userPassword, userFName, userLName, userID FROM user_master WHERE userName =?",
             (username,))
         data = c.fetchall()
         if len(data) > 0:
@@ -40,7 +42,6 @@ def login(username, userpassword):
                 dbuFName = row[1]
                 dbuLName = row[2]
                 dbuID = row[3]
-                dm = row[4]
             if userpassword == dbuPassword:
                 messagebox.showinfo(title="Success", message="Welcome {}".format(dbuFName + " " + dbuLName))
                 return dbuID, dbuFName, dbuLName, dm
@@ -81,7 +82,7 @@ def addcustomer(uid, cn, cmn):
 def gettransactions(dbcID):
     try:
         c.execute(
-            "SELECT transactionID, item, itemprice, qty, totalprice, payment, dues, totalDues, paiddate, entrydate FROM transaction_master WHERE customerID =?",
+            "SELECT transactionID, item, itemprice, qty, totalprice, payment, dues, customerDues, paiddate, entrydate FROM transaction_master WHERE customerID =?",
             (dbcID,))
         data = c.fetchall()
         return data
@@ -92,7 +93,7 @@ def gettransactions(dbcID):
 def addtransaction(dbcID, dbitem, dbitemprice, dbqty, dbtprice, dbpay, dbdues, dbtdues, dbbdate, dbedate):
     try:
         add = ("INSERT INTO transaction_master"
-               "(customerID, item, itemprice, qty, totalprice, payment, dues, totalDues, paiddate, entrydate)"
+               "(customerID, item, itemprice, qty, totalprice, payment, dues, customerDues, paiddate, entrydate)"
                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         data = (dbcID, dbitem, dbitemprice, dbqty, dbtprice, dbpay, dbdues, dbtdues, dbbdate, dbedate)
         c.execute(add, data)
